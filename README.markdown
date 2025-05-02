@@ -53,13 +53,9 @@
 ### Installation 🚀
 1. Clone the repository:
    ```bash
-   git clone https://github.com/[YourUsername]/CyberPulse-AI.git
+   git clone https://github.com/kassam-99/CyberPulse-AI.git
    ```
 2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-   Or manually install:
    ```bash
    pip install pandas numpy scikit-learn matplotlib seaborn joblib
    ```
@@ -93,9 +89,9 @@ Contributions are welcome! Please:
 [MIT License](LICENSE)
 
 ### Contact 📧
-- **Author**: [Your Name]
-- **GitHub**: [YourUsername]
-- **LinkedIn**: [Your LinkedIn Profile]
+- **Author**: Kassam Dakhlalah
+- **GitHub**: kassam-99
+
 
 ---
 
