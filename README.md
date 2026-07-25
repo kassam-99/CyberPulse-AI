@@ -111,6 +111,52 @@ key in an environment variable (e.g. `export MY_API_KEY=...` and read it with
 `os.environ["MY_API_KEY"]`) and keep it out of the notebook — a `.env` file is
 git-ignored for this purpose. Never commit secrets or captured network data.
 
+## Running with Docker 🐳
+A `Dockerfile` and `docker-compose.yml` are provided for a **reproducible**
+environment — Docker here is about pinning the Python/scikit-learn toolchain, not
+about sandboxing. This is a pure offline ML notebook: it needs **no special
+network privileges** (no `--net=host`, no added capabilities). Your
+`wifi_data.csv` and the generated `.pkl`/`.png` artifacts live on the host via a
+bind mount, so nothing sensitive is baked into the image.
+
+> ⚠️ **Ethics/legal note still applies:** only analyze captures from networks you
+> own or are explicitly authorized to assess.
+
+**Build the image:**
+```bash
+docker build -t cyberpulse-ai .
+```
+
+Place your `wifi_data.csv` in the project root first — it is mounted in at
+runtime, not copied into the image.
+
+### Mode A — interactive Jupyter Lab
+Serves Jupyter Lab on port **8888**. The current directory is mounted at `/app`,
+so the notebook reads `wifi_data.csv` and writes artifacts straight back to the
+host.
+
+```bash
+# with docker compose (recommended)
+docker compose up --build
+# -> open http://localhost:8888/lab
+
+# or with plain docker
+docker run --rm -it -p 8888:8888 -v "$(pwd):/app" cyberpulse-ai
+```
+The server runs with **no token/password** for local convenience — do **not**
+expose port 8888 to an untrusted network.
+
+### Mode B — headless run via nbconvert
+Executes the notebook end to end without a browser and writes an executed copy
+plus all `.pkl`/`.png` artifacts back to the mounted directory:
+
+```bash
+docker run --rm -v "$(pwd):/app" cyberpulse-ai \
+  jupyter nbconvert --to notebook --execute --inplace CyberPulse-AI.ipynb
+```
+Swap `--inplace` for `--output executed.ipynb` if you prefer to keep the original
+notebook untouched.
+
 ## Results 🎯 (indicative)
 - **KNN Accuracy**: ~67% (after hyperparameter tuning)
 - **Random Forest**: typically comparable or better, more robust to noisy data

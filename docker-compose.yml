@@ -1,0 +1,23 @@
+# Interactive Jupyter Lab service for CyberPulse AI.
+#   docker compose up --build   ->   open http://localhost:8888/lab
+#
+# The current directory is bind-mounted to /app, so the notebook finds your
+# wifi_data.csv and writes .pkl / .png artifacts straight back to the host.
+services:
+  cyberpulse-ai:
+    build: .
+    image: cyberpulse-ai
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./:/app
+    # No token/password for local convenience. Do NOT expose this port to an
+    # untrusted network; bind to localhost only if unsure.
+    command:
+      - jupyter
+      - lab
+      - --ip=0.0.0.0
+      - --port=8888
+      - --no-browser
+      - --ServerApp.token=
+      - --ServerApp.password=

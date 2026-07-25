@@ -1,0 +1,31 @@
+# VCS
+.git
+.gitignore
+
+# Python / virtualenvs
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Runtime data & generated artifacts (mounted / regenerated, not baked in)
+wifi_data.csv
+*.pkl
+*.png
+
+# Secrets
+.env
+.env.*
+*.pem
+*.key
+secrets.*
+
+# Docs / meta (not needed inside the image)
+docs/
+LICENSE
+README.md
+Dockerfile
+docker-compose.yml
+.dockerignore
