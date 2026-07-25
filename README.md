@@ -31,6 +31,9 @@ flowchart TD
 - **Feature Engineering** 🔍: SSID length as an extra signal.
 - **Visualizations** 📊: Model comparison, box plots, anomaly scatter, regression plots.
 - **Model Export** 💾: Saves `knn_model.pkl`, `rf_model.pkl`, and `scaler.pkl`.
+  The classifiers are trained on **scaled** features, so any downstream use must
+  first transform inputs with the exported `scaler.pkl` (see *Reusing the exported
+  models* below).
 
 ### Tech Stack 🛠️
 - **Language**: Python 🐍
@@ -74,6 +77,23 @@ following artifacts to the project directory (all git-ignored):
   `wifi_info_table.png`, `signal_strength_over_time.png`,
   `signal_strength_vs_time_diff.png`
 
+### Reusing the exported models 🔁
+This repository is a **self-contained Jupyter notebook** — there is no CLI or
+standalone inference script (yet). To reuse a trained model in your own code,
+load the scaler and a classifier and apply the scaler **before** predicting.
+Features must be provided in the same order used for training:
+`[Signal.Strength, Channel, SSID_Length]`.
+
+```python
+import joblib
+scaler = joblib.load('scaler.pkl')
+knn = joblib.load('knn_model.pkl')
+
+# X_new: rows of [Signal.Strength, Channel, SSID_Length]
+X_scaled = scaler.transform(X_new)
+predictions = knn.predict(X_scaled)   # 1 = Cisco, 0 = Not Cisco
+```
+
 ### Screenshots / Sample Output 📸
 Generated plots are git-ignored so raw output never gets committed. To showcase
 results in this README, drop a saved PNG into `docs/screenshots/` (which is kept
@@ -97,13 +117,20 @@ git-ignored for this purpose. Never commit secrets or captured network data.
 - **Recall (Cisco)**: ~72% (KNN)
 - **Anomalies**: ~5% of points flagged (Isolation Forest `contamination=0.05`)
 
-Exact numbers depend on your dataset.
+These figures are **illustrative only** — they come from the author's own capture
+and are **not reproducible from this repository**, since `wifi_data.csv` is not
+included. Exact numbers depend entirely on your dataset (the anomaly rate is fixed
+by the `contamination` setting, not learned).
 
 ## Penetration Testing Applications 🛡️
 - **Device Fingerprinting**: Identify Cisco devices for targeted scans.
 - **Rogue AP Detection**: Flag unusual signal patterns as possible unauthorized APs.
 - **Network Mapping**: Use vendor and signal analysis to map topology.
-- **Toolkit Integration**: Load exported `.pkl` models into downstream tooling.
+- **Toolkit Integration**: The exported `.pkl` models can be loaded into
+  downstream tooling — remember to apply the exported `scaler.pkl` to inputs
+  first (see *Reusing the exported models*). A real-time / toolkit-integrated
+  classifier is not part of this repo today; it is listed under *Future
+  Improvements*.
 
 ## Future Improvements 🔮
 - Advanced hyperparameter tuning ⚙️.
