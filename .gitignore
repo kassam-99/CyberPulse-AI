@@ -13,6 +13,8 @@ wifi_data.csv
 
 # Generated plots
 *.png
+# ...but allow curated screenshots committed for the README
+!docs/screenshots/*.png
 
 # Jupyter
 .ipynb_checkpoints/

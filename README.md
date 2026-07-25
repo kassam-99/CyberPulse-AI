@@ -11,6 +11,19 @@ detection, and network mapping 🔒.
 > ⚠️ **Ethics/legal note:** Use this project only on networks you own or are
 > explicitly authorized to assess.
 
+## ML Pipeline 🧭
+```mermaid
+flowchart TD
+    CSV["wifi_data.csv<br/>raw Wi-Fi survey"] --> FE["Data cleaning and<br/>feature engineering<br/>(SSID length, scaling)"]
+    FE --> CLS["KNN / Random Forest<br/>vendor classification"]
+    FE --> REG["Linear Regression<br/>signal trend"]
+    FE --> ANO["Isolation Forest<br/>rogue-AP anomaly detection"]
+    CLS --> MODELS["Models<br/>knn_model.pkl, rf_model.pkl, scaler.pkl"]
+    CLS --> OUT["Plots and predictions<br/>PNG charts, Cisco / anomaly labels"]
+    REG --> OUT
+    ANO --> OUT
+```
+
 ### Key Features ✨
 - **Device Classification** 🖥️: Tuned KNN (via `GridSearchCV`) and Random Forest.
 - **Signal Trend Analysis** 📈: Linear Regression over channel and time.
@@ -60,6 +73,16 @@ following artifacts to the project directory (all git-ignored):
   `signal_strength_by_vendor.png`, `signal_strength_vs_channel_with_regression.png`,
   `wifi_info_table.png`, `signal_strength_over_time.png`,
   `signal_strength_vs_time_diff.png`
+
+### Screenshots / Sample Output 📸
+Generated plots are git-ignored so raw output never gets committed. To showcase
+results in this README, drop a saved PNG into `docs/screenshots/` (which is kept
+in the repo via `.gitkeep` and exempted from the `*.png` ignore rule) and
+uncomment the matching line below:
+
+<!-- ![KNN vs Random Forest performance](docs/screenshots/model_comparison.png) -->
+<!-- ![Rogue-AP anomaly detection](docs/screenshots/anomaly_detection.png) -->
+<!-- ![Signal strength vs channel with regression](docs/screenshots/signal_strength_vs_channel_with_regression.png) -->
 
 ### API keys / secrets 🔑
 This project runs entirely locally on your own dataset and **requires no API keys
